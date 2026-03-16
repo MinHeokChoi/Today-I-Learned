@@ -32,7 +32,7 @@
 
 
 
-# [TIL] SwiftUI 심화: return의 비밀과 효율적인 뷰 분리 (View Extraction)
+# [TIL] SwiftUI : return문 언제?
 
 ## 1. return 키워드, 언제 생략하고 언제 써야 할까? 💡
 
