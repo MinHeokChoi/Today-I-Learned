@@ -50,3 +50,32 @@
       let name = "Gemini"
       return Text(name) // return 필수!
   }
+
+
+# [TIL] SwiftUI: Struct Initializer의 비밀 (Memberwise vs Manual)
+
+## 1. 멤버와이즈 초기화 (Memberwise Initializer) 🎁
+- **개념:** Swift 구조체(`struct`)는 내부 변수들만 선언해두면, 초기화 코드(`init`)를 자동으로 만들어준다.
+- **특징:** 단순히 외부에서 받은 값을 그대로 변수에 담기만 할 때 사용하며, 코드를 아주 간결하게 유지해준다.
+
+## 2. 수동 `init`을 직접 작성해야 하는 경우 🛠️
+컴퓨터가 자동으로 해주는 것 이상의 **'특별한 로직'**이 필요할 때 사용한다.
+
+### ① 데이터 전처리 (Processing)
+- 데이터를 받아서 저장하기 직전에 형태를 바꾸고 싶을 때.
+- 예: 숫자를 받아서 "20세"처럼 문자열로 가공하여 저장하는 경우.
+  ```swift
+  struct AgeView: View {
+      let ageString: String
+
+      init(age: Int) {
+          self.ageString = "\(age)세" // 숫자를 문자로 가공!
+      }
+
+      var body: some View { Text(ageString) }
+  }
+### ② 값의 변형 및 기본값 설정
+- 소문자를 대문자로 바꾸거나, 조건에 따라 다른 값을 초기값으로 설정하고 싶을 때.
+
+### ③ 접근 권한 설정
+- 다른 모듈이나 파일에서 접근할 수 있도록 public init 등을 명시해야 할 때.
