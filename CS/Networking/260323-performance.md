@@ -49,7 +49,7 @@ d_nodal = d_proc + d_queue + d_trans + d_prop
 ### 자주 하는 실수
 
 - **bytes → bits 변환**: 문제에서 L이 bytes로 주어지면 반드시 **×8** 해서 bits로!
-- **km → m 변환**: d_prop 계산 시 km × 10³ = m
+- **km → m 변환**: d_prop 계산 시 km = 10³ m
 - **m/s에서 m은 meter**(미터), **ms에서 m은 milli**(밀리) → 문맥으로 구분
 
 ---
