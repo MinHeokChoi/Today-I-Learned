@@ -77,9 +77,9 @@ $$\text{CPU Time} = \text{Clock Cycles} \times T = \frac{\text{Clock Cycles}}{f}
 
 ### CPI 도입 후 확장
 
-$$\text{Clock Cycles} = \text{\# Instructions} \times \text{CPI}$$
+$$\text{Clock Cycles} = \text{ Instructions} \times \text{CPI}$$
 
-$$\boxed{\text{CPU Time} = \text{\# Instructions} \times \text{CPI} \times T = \frac{\text{\# Instructions} \times \text{CPI}}{f}}$$
+$$\boxed{\text{CPU Time} = \text{ Instructions} \times \text{CPI} \times T = \frac{\text{\# Instructions} \times \text{CPI}}{f}}$$
 
 - **CPI (Cycles Per Instruction)** : 명령어 하나를 실행하는 데 평균적으로 걸리는 클럭 사이클 수
 
