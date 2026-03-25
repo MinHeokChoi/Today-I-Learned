@@ -124,9 +124,6 @@ CPI 조건: A=1, B=2, C=3
 ---
 
 ## 9. CPU Time 계산 — 풀이 방식
-
-명령어 종류별 Count가 주어진 경우, 아래처럼 직접 계산하는 방식이 더 정확하다.
-
 ```
 CPU Time = (Count_A × CPI_A + Count_B × CPI_B + ...) / f
 ```
