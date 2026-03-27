@@ -18,21 +18,21 @@
 기계적으로 도출된 공식과 사람이 증명하려는 논리 사이의 간극을 메워주는 다리 역할. 
 * **사전 조건 강화:** 원래 필요한 조건보다 더 빡빡한 조건을 주고 시작해도 코드는 잘 돌아간다. ($P \Rightarrow P'$)
 * **사후 조건 약화:** 코드가 보장하는 확실한 결과를 조금 더 느슨하게 표현해도 거짓이 아니다. ($Q' \Rightarrow Q$)
-$$\frac{\{P'\} C \{Q'\}, P \Rightarrow P',  Q' \Rightarrow Q}{\{P\} C \{Q\}}$$
+$$\frac{\{P\}S\{Q\}, P^{\prime} \Rightarrow P, Q \Rightarrow Q^{\prime}}{\{P^{\prime}\}S\{Q^{\prime}\}}$$
 
 ### ② 순서 규칙 (Sequence Rule) : "바통 터치"
 여러 줄의 코드를 이어 붙일 때 사용. 앞 문장의 결과(사후 조건)가 바로 다음 문장의 시작(사전 조건)과 완벽하게 맞물려야 한다. (거꾸로 추적하며 증명하는 것이 편함)
-$$\frac{\{P\} S_1 \{Q\}, \quad \{Q\} S_2 \{R\}}{\{P\} S_1 ; S_2 \{R\}}$$
+$$\frac{\{P1\} S1 \{P2\}, \{P2\} S2 \{P3\}}{\{P1\} S1; S2 \{P3\}}$$
 > **💡 대표적 응용:** 임시 변수 없이 두 변수의 값을 바꾸는 마술 코드 `x=y-x; y=y-x; x=x+y` 증명에 사용됨.
 
 ### ③ 조건문 규칙 (Selection / If Rule) : "갈림길"
 `if-else` 갈림길에서 조건 $B$가 참이든 거짓이든, 어느 길로 가더라도 결국 똑같은 목적지(사후 조건 $Q$)에 도달해야만 안전한 조건문으로 인정받는다.
-$$\frac{\{P \land B\} \ S_1 \ \{Q\}, \quad \{P \land \neg B\} \ S_2 \ \{Q\}}{\{P\} \ \text{if } B \text{ then } S_1 \text{ else } S_2 \ \{Q\}}$$
+$$\frac{\{B \text{ and } P\} S1 \{Q\}, \{(\text{not } B) \text{ and } P\} S2 \{Q\}}{\{P\} \text{ if } B \text{ then } S1 \text{ else } S2 \{Q\}}$$
 
 ### ④ 반복문 규칙 (While Rule)과 루프 불변성 (Loop Invariant)
 루프가 몇 번 돌지 알 수 없는 상황에서 안전성을 증명하기 위한 끝판왕 규칙.
 * **루프 불변성 ($I$):** 회전목마의 '안전벨트' 같은 존재. 루프 시작 전, 도는 중간, 끝난 후에도 **절대 변하지 않고 항상 참(True)**이어야 하는 조건.
-$$\frac{\{I \land B\} \ S \ \{I\}}{\{I\} \ \text{while } B \text{ do } S \ \{I \land \neg B\}}$$
+$$\frac{\{I \text{ and } B\} S \{I\}}{\{I\} \text{ while } B \text{ do } S \{I \text{ and } (\text{not } B)\}}$$
 > **💡 증명 핵심:** 루프가 완벽히 종료되면, 루프 불변성은 살아남고($I$), 루프 조건은 거짓이 된다($\neg B$). 이 두 가지 팩트($I \land \neg B$)를 교집합 하여 코드가 원하는 최종 사후 조건을 도출해 낸다.
 
 ---
