@@ -8,7 +8,7 @@
 
 * **사전 조건 (Pre-condition, $P$):** 코드가 실행되기 전에 반드시 참이어야 하는 조건.
 * **사후 조건 (Post-condition, $Q$):** 코드가 실행된 후에 반드시 보장되는 결과.
-* **호어 트리플 (Hoare Triple):** $\{P\} \ C \ \{Q\}$ (조건 $P$에서 명령 $C$를 실행하면 결과 $Q$가 나온다.)
+* **호어 트리플 (Hoare Triple):** $\{P\} \ S \ \{Q\}$ (조건 $P$에서 명령 $S$를 실행하면 결과 $Q$가 나온다.)
 
 ---
 
@@ -16,19 +16,18 @@
 
 ### ① 귀결 규칙 (Rule of Consequence) : "조건의 융통성"
 기계적으로 도출된 공식과 사람이 증명하려는 논리 사이의 간극을 메워주는 다리 역할. 
-* **사전 조건 강화:** 원래 필요한 조건보다 더 빡빡한 조건을 주고 시작해도 코드는 잘 돌아간다. ($P \Rightarrow P'$)
-* **사후 조건 약화:** 코드가 보장하는 확실한 결과를 조금 더 느슨하게 표현해도 거짓이 아니다. ($Q' \Rightarrow Q$)
-$$\frac{\{P\}S\{Q\}, P^{\prime} \Rightarrow P, Q \Rightarrow Q^{\prime}}{\{P^{\prime}\}S\{Q^{\prime}\}}$$ 
-
+* **사전 조건 강화:** 원래 필요한 조건보다 더 빡빡한 조건을 주고 시작해도 코드는 잘 돌아간다. ($P^{\prime} \Rightarrow P$)
+* **사후 조건 약화:** 코드가 보장하는 확실한 결과를 조금 더 느슨하게 표현해도 거짓이 아니다. ($Q \Rightarrow Q^{\prime}$)
+$$\frac{\{P\}S\{Q\}, \quad P^{\prime} \Rightarrow P, \quad Q \Rightarrow Q^{\prime}}{\{P^{\prime}\}S\{Q^{\prime}\}}$$
 
 ### ② 순서 규칙 (Sequence Rule) : "바통 터치"
 여러 줄의 코드를 이어 붙일 때 사용. 앞 문장의 결과(사후 조건)가 바로 다음 문장의 시작(사전 조건)과 완벽하게 맞물려야 한다. (거꾸로 추적하며 증명하는 것이 편함)
-$$\frac{\{P1\} S1 \{P2\}, \{P2\} S2 \{P3\}}{\{P1\} S1; S2 \{P3\}}$$ 
+$$\frac{\{P1\} S1 \{P2\}, \quad \{P2\} S2 \{P3\}}{\{P1\} S1; S2 \{P3\}}$$
 > **💡 대표적 응용:** 임시 변수 없이 두 변수의 값을 바꾸는 마술 코드 `x=y-x; y=y-x; x=x+y` 증명에 사용됨.
 
 ### ③ 조건문 규칙 (Selection / If Rule) : "갈림길"
 `if-else` 갈림길에서 조건 $B$가 참이든 거짓이든, 어느 길로 가더라도 결국 똑같은 목적지(사후 조건 $Q$)에 도달해야만 안전한 조건문으로 인정받는다.
-$$\frac{\{B \text{ and } P\} S1 \{Q\}, \{(\text{not } B) \text{ and } P\} S2 \{Q\}}{\{P\} \text{ if } B \text{ then } S1 \text{ else } S2 \{Q\}}$$
+$$\frac{\{B \text{ and } P\} S1 \{Q\}, \quad \{(\text{not } B) \text{ and } P\} S2 \{Q\}}{\{P\} \text{ if } B \text{ then } S1 \text{ else } S2 \{Q\}}$$
 
 ### ④ 반복문 규칙 (While Rule)과 루프 불변성 (Loop Invariant)
 루프가 몇 번 돌지 알 수 없는 상황에서 안전성을 증명하기 위한 끝판왕 규칙.
