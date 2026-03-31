@@ -1,0 +1,118 @@
+# 💡 [SwiftUI] Advanced Navigation & DI Container 아키텍처 설계
+
+> **학습 목표:** 단일 NavigationLink의 한계를 벗어나, Router 패턴과 DI Container를 활용해 탭바(TabView) 기반의 앱에서 독립적이고 확장 가능한 네비게이션 구조를 설계한다.
+
+## 1. 탭뷰(TabView)와 네비게이션(NavigationStack)의 차이
+* **TabView (화면 교체):** TV 채널을 돌리듯 Root 화면 자체를 갈아끼우는 수평적 이동. '뒤로 가기' 개념이 없음.
+* **NavigationStack (화면 쌓기):** 기존 화면 위에 새 화면을 포개어 올리는(Push) 수직적 이동. '뒤로 가기(Pop)' 가능.
+* **핵심 원칙:** 여러 탭이 있는 앱에서는 전체 탭뷰를 NavigationStack으로 감싸는 것이 아니라, **각 탭 내부(HomeView, MyPageView 등)에 독립적인 NavigationStack을 배치**해야 화면 전환이 꼬이지 않는다.
+
+---
+
+## 2. Navigation Router 패턴 도입
+기존 뷰 내부에서 `NavigationLink`를 남발하면 뷰와 이동 로직이 강하게 결합(Coupling)되는 문제가 발생한다. 이를 해결하기 위해 **라우터(Router) 객체**가 화면 이동을 전담하도록 분리한다.
+
+### 2.1. 제네릭(Generic)을 활용한 만능 라우터 설계
+각 탭은 자신만의 고유한 목적지(Route)를 가진다. 라우터를 탭마다 중복 생성하지 않기 위해 `<Destination: Hashable>` 제네릭을 사용한다.
+
+```swift
+import SwiftUI
+import Observation
+
+// 1. 탭별 목적지(Route) 분리
+enum HomeRoute: Hashable {
+    case movieDetail(title: String)
+}
+
+enum MyPageRoute: Hashable {
+    case profileManage
+}
+
+// 2. 제네릭을 활용한 라우터 매니저
+@Observable
+class NavigationRouter<Destination: Hashable> {
+    var path = NavigationPath() // 순수 데이터 바구니
+
+    func push(_ route: Destination) { path.append(route) }
+    func pop() { if !path.isEmpty { path.removeLast() } }
+    func reset() { path = NavigationPath() }
+}
+```
+
+---
+
+## 3. DI Container (의존성 주입 컨테이너)
+앱이 커지면 라우터나 네트워크 서비스 등 수많은 '도구'들이 필요하다. 뷰 내부에서 이를 직접 생성(`@State`)하지 않고, 중앙 도구함(**DIContainer**)에서 만들어서 뷰에게 밀어 넣어주는(Inject) 방식을 사용한다.
+
+### 3.1. DIContainer 구현 및 주입
+```swift
+import SwiftUI
+import Observation
+
+@Observable
+class DIContainer {
+    // 앱 전체의 라우터들을 한 곳에서 관리
+    var homeRouter = NavigationRouter<HomeRoute>()
+    var myPageRouter = NavigationRouter<MyPageRoute>()
+}
+
+// App 진입점에서 딱 한 번 생성하고 환경변수로 뿌려줌(Wi-Fi 켜기)
+@main
+struct MyApp: App {
+    @State private var container = DIContainer()
+
+    var body: some Scene {
+        WindowGroup {
+            MainTabView()
+                .environment(container) // 자식 뷰들이 꺼내 쓸 수 있도록 주입
+        }
+    }
+}
+```
+
+---
+
+## 4. Environment를 활용한 데이터 수신과 바인딩
+주입된 라우터를 하위 뷰에서 사용할 때는 `@Environment`를 사용한다. 이는 중간 뷰들을 거치지 않고 필요한 곳에서 바로 데이터를 꺼내 쓰는 방식이다.
+
+### 4.1. 뷰에서 라우터 사용하기
+```swift
+import SwiftUI
+
+struct MyPageView: View {
+    // 1. 부모가 켜둔 Wi-Fi(환경변수)에서 마이페이지 전용 라우터만 쏙 빼오기
+    @Environment(NavigationRouter<MyPageRoute>.self) private var router
+
+    var body: some View {
+        // 2. @Observable 객체를 바인딩($)하기 위한 래퍼
+        @Bindable var bindableRouter = router
+        
+        // 3. $ 기호: 시스템의 '뒤로 가기' 액션 시 path 배열을 수정(쓰기 권한)할 수 있도록 양방향 바인딩
+        NavigationStack(path: $bindableRouter.path) {
+            VStack {
+                Button("회원정보 수정") {
+                    router.push(.profileManage) // 라우터에게 목적지 전달
+                }
+            }
+            // 4. 수하물 분류기 역할: 들어온 Route 타입에 따라 화면 매칭
+            .navigationDestination(for: MyPageRoute.self) { route in
+                switch route {
+                case .profileManage:
+                    ProfileMangaeView()
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
+## 📝 딥다이브 (Q&A)
+
+* **Q. 왜 `$bindableRouter.path` 처럼 `$`를 붙이나요?**
+    * A. 사용자가 네이티브 '< 뒤로' 버튼을 누르거나 스와이프할 때, `NavigationStack`이 스스로 최상단 뷰를 지웁니다. 이때 우리 코드의 `path` 배열 데이터도 함께 삭제(동기화)해야 하므로 '쓰기 권한'이 포함된 양방향 바인딩(`$`)이 필수적입니다.
+* **Q. `.navigationDestination(for: MyPageRoute.self)` 에서 `.self`의 의미는?**
+    * A. 값이 아닌 **'타입 그 자체(메타타입)'**를 넘겨주기 위함입니다. "앞으로 MyPageRoute 종류의 데이터가 들어오면 여기서 처리하겠다"는 선언입니다.
+* **Q. 탭별로 Enum을 분리하면 무엇이 좋나요?**
+    * A. 관심사의 분리(SoC)가 명확해집니다. 마이페이지 뷰는 홈 뷰의 네비게이션 케이스를 전혀 알 필요가 없으며, 잘못된 경로를 Push 하려는 실수를 컴파일 타임에 완벽하게 방지(Type Safe)할 수 있습니다.
