@@ -2,8 +2,6 @@
 
 ## 1. 앱 구조 & 생명주기
 
-> SwiftUI 앱이 어디서 시작되고 어떻게 첫 화면을 결정하는지를 이해해야, 로그인 분기·온보딩 같은 **앱 진입 흐름**을 자유롭게 설계할 수 있다.
-
 | 개념 | 사용 위치 | 역할 |
 |------|----------|------|
 | `@main` + `App` 프로토콜 | UMCMegaBoxApp.swift | 앱 진입점 |
@@ -30,8 +28,6 @@ struct RootView: View {
 
 ## 2. 데이터 흐름 (Property Wrappers)
 
-> SwiftUI는 데이터가 변하면 UI가 자동으로 갱신되는 구조다. 어떤 Wrapper를 써야 데이터가 올바른 범위에서 흐르는지 모르면 **UI가 안 바뀌거나 예상 밖의 화면이 리렌더링**되는 버그가 생긴다.
-
 | Wrapper | 사용 위치 | 역할 |
 |---------|----------|------|
 | `@State` | HomeView, MovieDetailView | View가 소유하는 로컬 상태 |
@@ -50,8 +46,6 @@ struct RootView: View {
 ---
 
 ## 3. 네비게이션 구조
-
-> 화면이 많아질수록 네비게이션 로직이 View 곳곳에 흩어지면 관리가 불가능해진다. **NavigationStack + Router 패턴**으로 경로를 한 곳에서 제어하면, 딥링크·로그아웃 초기화 등 복잡한 흐름도 깔끔하게 처리할 수 있다.
 
 | 개념 | 사용 위치 | 역할 |
 |------|----------|------|
@@ -73,8 +67,6 @@ NavigationStack(path: $router.path)
 ---
 
 ## 4. TabView
-
-> 대부분의 상용 앱은 하단 탭 바를 사용한다. TabView 하나로 **탭 네비게이션과 페이지 스와이프**를 모두 구현할 수 있으므로, selection-value 매칭 원리를 알면 다양한 UI 패턴에 재활용할 수 있다.
 
 | 개념 | 사용 위치 |
 |------|----------|
@@ -100,8 +92,6 @@ TabView(selection: $selectedTheaterIndex) {
 
 ## 5. 레이아웃
 
-> SwiftUI 레이아웃은 **Stack 조합이 기본**이지만, 성능(Lazy)·반응형 크기(GeometryReader)·프로그래밍 스크롤(ScrollViewReader) 같은 도구도 적절하게 쓸 수 있어야 한다.
-
 | 개념 | 사용 위치 | 역할 |
 |------|----------|------|
 | `VStack`, `HStack` | 전체 | 수직/수평 배치 |
@@ -115,8 +105,6 @@ TabView(selection: $selectedTheaterIndex) {
 ---
 
 ## 6. 이미지 & 스타일링
-
-> 같은 이미지라도 `renderingMode`, `clipShape`, `LinearGradient` 조합에 따라 **완전히 다른 느낌**이 된다. 
 
 | 개념 | 사용 위치 |
 |------|----------|
@@ -147,8 +135,6 @@ TabView(selection: $selectedTheaterIndex) {
 
 ## 8. 의존성 주입 (DI) 패턴
 
-> View가 직접 ViewModel이나 Router를 생성하면 **테스트·교체가 어렵고 결합도가 높아진다**. `.environment()`로 외부에서 주입하면 View는 "무엇을 받아 쓸지"만 알면 되므로, 구조가 유연해지고 로그아웃 시 상태 초기화 같은 전역 동작도 한 곳에서 처리할 수 있다.
-
 ```
 App
 └── RootView (@AppStorage로 로그인 분기)
@@ -170,8 +156,6 @@ App
 
 ## 9. MVVM 패턴
 
-> View에 비즈니스 로직이 섞이면 코드가 금방 비대해진다. **Model-ViewModel-View**로 역할을 분리하면 UI 변경이 로직에 영향을 주지 않고, AI가 생성한 코드를 리뷰할 때도 "이 코드가 어느 레이어에 있어야 하는지" 판단 기준이 명확해진다.
-
 ```
 Model (데이터 구조)
 ├── MovieModel      — Identifiable, Hashable, 포맷팅 computed property
@@ -192,8 +176,6 @@ View (UI만 담당)
 
 ## 10. 재사용 컴포넌트
 
-> 비슷한 UI를 복붙하면 수정 시 전부 찾아 고쳐야 한다. **파라미터만 바꿔 재사용**할 수 있는 컴포넌트로 추출하면 유지보수 비용이 크게 줄고, 디자인 일관성도 자연스럽게 지켜진다.
-
 | 컴포넌트 | 파일 | 재사용 방법 |
 |---------|------|------------|
 | `ProfileHeaderView` | Components/ | 이름, 포인트, 회원정보 버튼 |
@@ -204,8 +186,6 @@ View (UI만 담당)
 ---
 
 ## 11. Font 확장 (Extension)
-
-> 폰트를 매번 `Font.custom("Pretendard-Bold", size: 24)`로 쓰면 오타·불일치가 생기기 쉽다. **Extension + static 프로퍼티**로 한 번 정의해두면 `.pretendardBold24`처럼 자동완성으로 안전하게 사용할 수 있다.
 
 ```swift
 // enum으로 폰트 무게 정의 → static 프로퍼티로 빠르게 접근
