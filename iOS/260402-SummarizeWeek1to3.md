@@ -1,4 +1,4 @@
-# 🗂️ MegaBox 프로젝트에서 배운 SwiftUI 핵심 요소  
+# 🗂️ MegaBox 프로젝트 Week1 ~ Week3에서 배운 SwiftUI 핵심 요소  
 
 ## 1. 앱 구조 & 생명주기
 
