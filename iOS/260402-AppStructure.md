@@ -1,6 +1,6 @@
 ---
 date: 2026-04-02
-tags: #SwiftUI #AppStructure #AppLifecycle #Scene #View #AppStorage
+tags: ["SwiftUI", "AppStructure", "AppLifecycle", "Scene", "View", "AppStorage"]
 ---
 
 # [SwiftUI] App 구조와 생명주기 완벽 이해: 극장 비유로 끝내기
