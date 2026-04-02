@@ -2,6 +2,7 @@
 
 ## 1. 앱 구조 & 생명주기
 
+
 | 개념 | 사용 위치 | 역할 |
 |------|----------|------|
 | `@main` + `App` 프로토콜 | UMCMegaBoxApp.swift | 앱 진입점 |
@@ -28,6 +29,7 @@ struct RootView: View {
 
 ## 2. 데이터 흐름 (Property Wrappers)
 
+
 | Wrapper | 사용 위치 | 역할 |
 |---------|----------|------|
 | `@State` | HomeView, MovieDetailView | View가 소유하는 로컬 상태 |
@@ -46,6 +48,7 @@ struct RootView: View {
 ---
 
 ## 3. 네비게이션 구조
+
 
 | 개념 | 사용 위치 | 역할 |
 |------|----------|------|
@@ -67,6 +70,7 @@ NavigationStack(path: $router.path)
 ---
 
 ## 4. TabView
+
 
 | 개념 | 사용 위치 |
 |------|----------|
@@ -92,6 +96,7 @@ TabView(selection: $selectedTheaterIndex) {
 
 ## 5. 레이아웃
 
+
 | 개념 | 사용 위치 | 역할 |
 |------|----------|------|
 | `VStack`, `HStack` | 전체 | 수직/수평 배치 |
@@ -105,6 +110,7 @@ TabView(selection: $selectedTheaterIndex) {
 ---
 
 ## 6. 이미지 & 스타일링
+
 
 | 개념 | 사용 위치 |
 |------|----------|
@@ -121,6 +127,7 @@ TabView(selection: $selectedTheaterIndex) {
 
 ## 7. Toolbar
 
+
 > 네비게이션 바의 버튼·타이틀·배경을 세밀하게 커스터마이징하려면 Toolbar API를 알아야 한다. 기본 뒤로가기 버튼을 숨기고 **브랜드에 맞는 헤더**를 만드는 것이 중요하다.
 
 | 개념 | 사용 위치 |
@@ -134,6 +141,7 @@ TabView(selection: $selectedTheaterIndex) {
 ---
 
 ## 8. 의존성 주입 (DI) 패턴
+
 
 ```
 App
@@ -156,6 +164,7 @@ App
 
 ## 9. MVVM 패턴
 
+
 ```
 Model (데이터 구조)
 ├── MovieModel      — Identifiable, Hashable, 포맷팅 computed property
@@ -176,6 +185,7 @@ View (UI만 담당)
 
 ## 10. 재사용 컴포넌트
 
+
 | 컴포넌트 | 파일 | 재사용 방법 |
 |---------|------|------------|
 | `ProfileHeaderView` | Components/ | 이름, 포인트, 회원정보 버튼 |
@@ -186,6 +196,7 @@ View (UI만 담당)
 ---
 
 ## 11. Font 확장 (Extension)
+
 
 ```swift
 // enum으로 폰트 무게 정의 → static 프로퍼티로 빠르게 접근
